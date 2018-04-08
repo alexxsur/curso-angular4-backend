@@ -17,8 +17,44 @@ $app->post('/productos', function() use ($app,$db){
 	$json = $app->request->post('json');
 	$data = json_decode($json, true);
 
-	var_dump($json);
-	var_dump($data);
+	if (!isset($data['nombre'])) {
+		$data['nombre'] = NULL;
+	}
+	if (!isset($data['descripcion'])) {
+		$data['descripcion'] = NULL;
+	}
+	if (!isset($data['precio'])) {
+		$data['precio'] = NULL;
+	}
+	if (!isset($data['imagen'])) {
+		$data['imagen'] = NULL;
+	}		
+
+	$nombre = $data['nombre'];
+	$descripcion = $data['description'];
+	$precio = $data['precio'];
+	$imagen = $data['imagen'];
+
+	$query = "INSERT INTO productos VALUES (NULL,'$nombre','$descripcion','$precio','$imagen')";
+
+	$insert = $db->query($query);
+
+		$result = $arrayName = array(
+			'status' => 'error',
+			'code' => 404,
+			'message' => "Producto NO fue creado correctamente"
+		);
+
+	if($insert){
+		$result = $arrayName = array(
+			'status' => 'success',
+			'code' => 200,
+			'message' => "Producto creado correctamente"
+		);
+	}
+
+    //echo $query;
+	echo json_encode($result);
 });
 
 $app->run();
