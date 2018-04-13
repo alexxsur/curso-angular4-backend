@@ -79,6 +79,43 @@ $app->get('/delete-producto/:id',function($id) use($db,$app){
 });
 
 //ACTUALIZAR UN PRODUCTO
+$app->post('/update-producto/:id', function($id) use ($app,$db){
+	$json = $app->request->post('json');
+	$data = json_decode($json, true);
+
+	if (!isset($data['nombre'])) {
+		$data['nombre'] = NULL;
+	}
+	if (!isset($data['descripcion'])) {
+		$data['descripcion'] = NULL;
+	}
+	if (!isset($data['precio'])) {
+		$data['precio'] = NULL;
+	}
+
+	$nombre = $data['nombre'];
+	$descripcion = $data['descripcion'];
+	$precio = $data['precio'];
+
+	$sql = "UPDATE productos SET nombre = '$nombre', descripcion = '$descripcion', precio = '$precio' WHERE id = $id;";
+
+	$query = $db->query($sql);
+
+	if($query){
+		$result = array(
+			'status' => 'success',
+			'code' => 200,
+			'message' => "Producto actualizado correctamente"
+		);
+	}else{
+		$result = array(
+		'status' => 'error',
+		'code' => 404,
+		'message' => "Producto NO fue actualizado correctamente"
+	);
+	}
+	echo json_encode($result);
+});
 
 //SUBIR UNA IMAGEN A UN PRODUCTO
 
@@ -101,7 +138,7 @@ $app->post('/productos', function() use ($app,$db){
 	}		
 
 	$nombre = $data['nombre'];
-	$descripcion = $data['description'];
+	$descripcion = $data['descripcion'];
 	$precio = $data['precio'];
 	$imagen = $data['imagen'];
 
